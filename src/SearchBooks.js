@@ -2,6 +2,10 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 
 class SearchBooks extends Component {
+    state = {
+        allBooks: []
+    }
+    
     render() {
         return (
             <div className="search-books">
