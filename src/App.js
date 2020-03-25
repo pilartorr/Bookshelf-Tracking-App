@@ -22,15 +22,24 @@ class App extends Component {
         })
       })
   }
-  updateShelf = (book, shelf) => {
-    this.setState((currentState) => ({
-      myBooks: currentState.myBooks.filter((thisBooK) => {
-        return thisBooK.id !== book.id
-      })
-    }))
-    BooksAPI.update(book, shelf)
+  
+  updateShelf = (myBook, newShelf) => {
+    this.setState(prevState => {
+      
+      let selectedBook = prevState.myBooks.find(thisBook => thisBook.id === myBook.id);
+      let bookToChange = Object.assign(selectedBook, {});
+
+      return {  
+        myBooks: selectedBook && (
+                 bookToChange.shelf = newShelf,
+                 prevState.myBooks.filter(thisBook => thisBook.id !== myBook.id).concat(bookToChange) 
+               ) 
+      }
+    });
+    
+    BooksAPI.update(myBook, newShelf)
   }
-          
+  
   render() {
     return (
       <div className="app">
