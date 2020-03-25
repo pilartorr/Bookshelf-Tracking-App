@@ -9,9 +9,7 @@ import MyListBooks from './MyListBooks'
 
 class App extends Component {
   state = {
-    myBooks: [
-      
-    ]
+    myBooks: []
   }
   componentDidMount() {
     BooksAPI.getAll()
@@ -24,23 +22,28 @@ class App extends Component {
         })
       })
   }
-  searchBook = (book) => {
-    BooksAPI.search(book)
-      .then((book) => {
-        this.setState((currentState) => ({
-          myBooks: currentState.myBooks.concat([book])
-        }))
+  updateShelf = (book, shelf) => {
+    this.setState((currentState) => ({
+      myBooks: currentState.myBooks.filter((thisBooK) => {
+        return thisBooK.id !== book.id
       })
+    }))
+    BooksAPI.update(book, shelf)
   }
+          
   render() {
     return (
       <div className="app">
         <BrowserRouter>
           <Route exact path="/" render={()=>(
-            <MyListBooks myBooks={this.state.myBooks} />
+            <MyListBooks 
+              myBooks={this.state.myBooks}
+              onUpdateShelf={this.updateShelf} />
           )} />
           <Route path="/search" render={()=>(
-            <SearchBooks />
+            <SearchBooks 
+              myBooks={this.state.myBooks}
+              onUpdateShelf={this.updateShelf}/>
           )} />
         </BrowserRouter> 
       </div>

@@ -1,10 +1,17 @@
 import React,  { Component } from 'react'
 import { Link } from 'react-router-dom'
 import Book from './Book'
+import PropTypes from 'prop-types'
 
 class MyListBooks extends Component {
+
+    static propTypes = {
+        myBooks: PropTypes.array.isRequired,
+        onUpdateShelf: PropTypes.func.isRequired
+    }
     render() {
-        const { myBooks } = this.props;
+        const { myBooks, onUpdateShelf } = this.props;
+      
         const bookshelves = [
             {
               key: 'currentlyReading',
@@ -19,7 +26,7 @@ class MyListBooks extends Component {
               name: 'Read'
             }
         ];
-
+    
         return(
             <div className="list-books">
                 <div className="list-books-title">
@@ -36,11 +43,13 @@ class MyListBooks extends Component {
                                             if(book.shelf === bookshelf.key) {
                                                 return (
                                                     <li key={book.id}>
-                                                        <Book book={book} />
+                                                        <Book 
+                                                            book={book}
+                                                            updateShelf={onUpdateShelf} />
                                                     </li>
                                                 )
                                             } else {
-                                                return (<li key={book.id}></li>)
+                                                return
                                             }
                                         })}
                                     </ol>
