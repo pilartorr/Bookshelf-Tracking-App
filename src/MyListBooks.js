@@ -42,8 +42,9 @@ class MyListBooks extends Component {
                                         {myBooks.map((book) => {
                                             if(book.shelf === bookshelf.key) {
                                                 return (
-                                                    <li key={book.id}>
+                                                    <li>
                                                         <Book 
+                                                            key={book.id}
                                                             book={book}
                                                             updateShelf={onUpdateShelf} />
                                                     </li>

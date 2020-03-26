@@ -32,13 +32,14 @@ class App extends Component {
       return {  
         myBooks: selectedBook && (
                  bookToChange.shelf = newShelf,
-                 prevState.myBooks.filter(thisBook => thisBook.id !== myBook.id).concat(bookToChange) 
-               ) 
+                 prevState.myBooks.filter(book => book.id !== myBook.id).concat(bookToChange) 
+               )
       }
     });
     
     BooksAPI.update(myBook, newShelf)
   }
+
   
   render() {
     return (
