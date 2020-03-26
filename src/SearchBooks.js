@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import Book from './Book'
 import PropTypes from 'prop-types'
-import BooksAPI from './BooksAPI'
+import * as BooksAPI from './BooksAPI'
 
 class SearchBooks extends Component {
 
@@ -13,7 +13,8 @@ class SearchBooks extends Component {
 
     state = {
         query: '',
-        results: []
+        results: [],
+        error: false
     }
 
     updateQuery = (query) => {
@@ -22,6 +23,7 @@ class SearchBooks extends Component {
             query: query,
             results: []
         }), console.log(this.state.results))
+
           this.searchBooks(query)
         }
         else {
@@ -31,26 +33,26 @@ class SearchBooks extends Component {
 
     clearQuery = () => {
         this.setState({
-            query: '',
-            results: []
+            query: ''
         })
     }
 
     searchBooks = (query) => {
         if (query.length > 0) {
             BooksAPI.search(query)
-            .then(searchResults => {
-                searchResults.length > 0
-                    ? this.setState({ results: searchResults })
-                    : this.setState({ results: [] }) 
+                .then(searchResults => {
+                    searchResults.length > 0
+                        ? this.setState(() => ({ results: searchResults, error: false }), console.log(this.state.results))
+                        : this.setState({ results: [], error: true}) 
                 }
             );
         } 
     }
+    
   
     render() {
 
-        const { query, results } = this.state
+        const { query, results, error } = this.state
         const { onUpdateShelf } = this.props
 
         return(
@@ -71,7 +73,7 @@ class SearchBooks extends Component {
                 <div className="search-books-results">
                     <ol className="books-grid">
                         <li>
-                            { results ? (
+                            { results && (
                                 results.map((book) => (
                                     <Book
                                         key={book.id}
@@ -79,11 +81,14 @@ class SearchBooks extends Component {
                                         updateShelf={onUpdateShelf}
                                     />
                                 ))
-                            ) : (
-                            <h4>No results for, "{query}"</h4>
                             )}
                         </li>
                     </ol>
+                    {error && (
+                        <p className="alert alert-danger w-100 mx-auto text-center lead" role="alert">
+                            Not found results for {query}. Please, try again.
+                        </p>
+                    )}
                 </div>
             </div>
         )
