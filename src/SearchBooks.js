@@ -99,7 +99,7 @@ class SearchBooks extends Component {
                     </ol>
                     {error && (
                         <p className="alert alert-danger w-100 mx-auto text-center lead" role="alert">
-                            Not found results for {query}. Please, try again.
+                            No results found for {query}. Please, try again.
                         </p>
                     )}
                 </div>
