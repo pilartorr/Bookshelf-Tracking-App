@@ -33,7 +33,8 @@ class SearchBooks extends Component {
 
     clearQuery = () => {
         this.setState({
-            query: ''
+            query: '',
+            results: []
         })
     }
 
@@ -41,7 +42,7 @@ class SearchBooks extends Component {
         if (query.length > 0) {
             BooksAPI.search(query)
                 .then(searchResults => {
-                    searchResults.length > 0
+                    query === this.state.query
                         ? this.setState(() => ({ results: this.updateExistingShelves(searchResults), error: false }), console.log(this.state.results))
                         : this.setState({ results: [], error: true}) 
                 }
