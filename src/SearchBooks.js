@@ -13,8 +13,7 @@ class SearchBooks extends Component {
 
     state = {
         query: '',
-        results: [],
-        error: false
+        results: []
     }
 
     updateQuery = (query) => {
@@ -43,8 +42,8 @@ class SearchBooks extends Component {
             BooksAPI.search(query)
                 .then(searchResults => {
                     query === this.state.query
-                        ? this.setState(() => ({ results: this.updateExistingShelves(searchResults), error: false }), console.log(this.state.results))
-                        : this.setState({ results: [], error: true}) 
+                        ? this.setState(() => ({ results: this.updateExistingShelves(searchResults)}), console.log(this.state.results))
+                        : this.setState({ results: []}) 
                 }
             );
         } 
@@ -67,7 +66,7 @@ class SearchBooks extends Component {
 
     render() {
 
-        const { query, results, error } = this.state
+        const { query, results } = this.state
         const { onUpdateShelf } = this.props
 
         return(
@@ -87,7 +86,7 @@ class SearchBooks extends Component {
                 </div>
                 <div className="search-books-results">
                     <ol className="books-grid">
-                        { results && (
+                        { results ? (
                             results.map((book) => (
                                 <li key={book.id}>
                                     <Book
@@ -96,13 +95,11 @@ class SearchBooks extends Component {
                                     />
                                 </li>
                             ))
-                        )}  
-                    </ol>
-                    {error && (
+                        ) : (
                         <p className="alert alert-danger w-100 mx-auto text-center lead" role="alert">
                             No results found for {query}. Please, try again.
-                        </p>
-                    )}
+                        </p>)}  
+                    </ol>
                 </div>
             </div>
         )
