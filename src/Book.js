@@ -14,12 +14,14 @@ class Book extends Component {
             {value: "wantToRead", disabled: false, text: "Want to Read"},
             {value: "read", disabled: false, text: "Read"},
             {value: "none", disabled: false, text: "None"}
-        ]
+        ];
+
+        const imageThumb = book.imageLinks ? book.imageLinks.smallThumbnail : null;
 
         return (
             <div className="book">
                 <div className="book-top">
-                    <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks.thumbnail})` }}></div>
+                    <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${imageThumb})` }}></div>
                     <div className="book-shelf-changer">
                     <select value={book.shelf ? book.shelf : 'none'} onChange={(event) => {updateShelf(book, event.target.value)}}>
                         {options.map(option => (<option key={option.value} value={option.value} disabled={option.disabled}>{option.text}</option>))}

@@ -42,14 +42,28 @@ class SearchBooks extends Component {
             BooksAPI.search(query)
                 .then(searchResults => {
                     searchResults.length > 0
-                        ? this.setState(() => ({ results: searchResults, error: false }), console.log(this.state.results))
+                        ? this.setState(() => ({ results: this.updateExistingShelves(searchResults), error: false }), console.log(this.state.results))
                         : this.setState({ results: [], error: true}) 
                 }
             );
         } 
     }
-    
-  
+
+    updateExistingShelves(searchResults) {
+        if(!searchResults.error) {
+            const myBooks = this.props.myBooks
+            const newBook = searchResults.filter((result) => myBooks.find(b => {
+                if(b.id === result.id) {
+                    result.shelf = b.shelf
+                    return result
+                } else { return ''}
+            }))
+
+            myBooks.concat(newBook)
+            return searchResults
+        }
+    }
+
     render() {
 
         const { query, results, error } = this.state
@@ -72,17 +86,16 @@ class SearchBooks extends Component {
                 </div>
                 <div className="search-books-results">
                     <ol className="books-grid">
-                        <li>
-                            { results && (
-                                results.map((book) => (
+                        { results && (
+                            results.map((book) => (
+                                <li key={book.id}>
                                     <Book
-                                        key={book.id}
-                                        book={book}
+                                        book={book} 
                                         updateShelf={onUpdateShelf}
                                     />
-                                ))
-                            )}
-                        </li>
+                                </li>
+                            ))
+                        )}  
                     </ol>
                     {error && (
                         <p className="alert alert-danger w-100 mx-auto text-center lead" role="alert">

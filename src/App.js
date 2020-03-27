@@ -8,9 +8,11 @@ import MyListBooks from './MyListBooks'
 
 
 class App extends Component {
+
   state = {
     myBooks: []
   }
+
   componentDidMount() {
     BooksAPI.getAll()
       .then((myBooks) => {
@@ -22,23 +24,35 @@ class App extends Component {
         })
       })
   }
-  
-  updateShelf = (myBook, newShelf) => {
-    this.setState(prevState => {
-      
-      let selectedBook = prevState.myBooks.find(thisBook => thisBook.id === myBook.id);
-      let bookToChange = Object.assign(selectedBook, {});
 
-      return {  
-        myBooks: selectedBook && (
-                 bookToChange.shelf = newShelf,
-                 prevState.myBooks.filter(book => book.id !== myBook.id).concat(bookToChange) 
-               )
-      }
-    });
-    
-    BooksAPI.update(myBook, newShelf)
-  }
+
+  updateShelf = (myBook, newShelf) => {
+
+    const selectedBook = this.state.myBooks.find(thisBook => thisBook.id === myBook.id);
+
+    if (selectedBook) {
+      // update existing
+      selectedBook.shelf = newShelf;
+
+      BooksAPI.update(myBook, newShelf)
+              .then(this.setState(currentState => ({
+                myBooks: currentState.myBooks
+              })))
+
+      console.log("updated Book : ", selectedBook)
+
+    } else {
+      // add new one
+        myBook.shelf = newShelf;
+        
+        BooksAPI.update(myBook, newShelf)
+                .then(this.setState(prevState => ({
+                  myBooks: prevState.myBooks.concat(myBook)
+                })))
+                
+        console.log("new Book: ", myBook)
+    }
+  };
 
   
   render() {
@@ -62,4 +76,3 @@ class App extends Component {
 }
 
 export default App
-
