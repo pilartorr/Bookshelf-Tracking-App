@@ -13,15 +13,15 @@ class SearchBooks extends Component {
 
     state = {
         query: '',
-        results: []
+        books: []
     }
 
     updateQuery = (query) => {
         if(query.length > 0 ) {
           this.setState(() => ({
             query: query,
-            results: []
-        }), console.log(this.state.results))
+            books: []
+        }), console.log(this.state.books))
 
           this.searchBooks(query)
         }
@@ -33,40 +33,40 @@ class SearchBooks extends Component {
     clearQuery = () => {
         this.setState({
             query: '',
-            results: []
+            books: []
         })
     }
 
     searchBooks = (query) => {
         if (query.length > 0) {
             BooksAPI.search(query)
-                .then(searchResults => {
+                .then(booksResults => {
                     query === this.state.query
-                        ? this.setState(() => ({ results: this.updateExistingShelves(searchResults)}), console.log(this.state.results))
-                        : this.setState({ results: []}) 
+                        ? this.setState(() => ({ books: this.updateExistingShelves(booksResults)}), console.log(this.state.books))
+                        : this.setState({ books: []}) 
                 }
             );
         } 
     }
 
-    updateExistingShelves(searchResults) {
-        if(!searchResults.error) {
+    updateExistingShelves(booksResults) {
+        if(!booksResults.error) {
             const myBooks = this.props.myBooks
-            const newBook = searchResults.filter((result) => myBooks.find(b => {
-                if(b.id === result.id) {
-                    result.shelf = b.shelf
-                    return result
+            const book = booksResults.filter((book) => myBooks.find(myBook => {
+                if(myBook.id === book.id) {
+                    book.shelf = myBook.shelf
+                    return book
                 } else { return ''}
             }))
 
-            myBooks.concat(newBook)
-            return searchResults
+            myBooks.concat(book)
+            return booksResults
         }
     }
 
     render() {
 
-        const { query, results } = this.state
+        const { query, books } = this.state
         const { onUpdateShelf } = this.props
 
         return(
@@ -86,8 +86,8 @@ class SearchBooks extends Component {
                 </div>
                 <div className="search-books-results">
                     <ol className="books-grid">
-                        { results ? (
-                            results.map((book) => (
+                        { books ? (
+                            books.map((book) => (
                                 <li key={book.id}>
                                     <Book
                                         book={book} 

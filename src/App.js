@@ -26,31 +26,31 @@ class App extends Component {
   }
 
 
-  updateShelf = (myBook, newShelf) => {
+  updateShelf = (book, newShelf) => {
 
-    const selectedBook = this.state.myBooks.find(thisBook => thisBook.id === myBook.id);
+    const myBook = this.state.myBooks.find(myBook => myBook.id === book.id);
 
-    if (selectedBook) {
+    if (myBook) {
       // update existing
-      selectedBook.shelf = newShelf;
+      myBook.shelf = newShelf;
 
-      BooksAPI.update(myBook, newShelf)
+      BooksAPI.update(book, newShelf)
               .then(this.setState(currentState => ({
                 myBooks: currentState.myBooks
               })))
 
-      console.log("updated Book : ", selectedBook)
+      console.log("updated Book : ", myBook)
 
     } else {
       // add new one
-        myBook.shelf = newShelf;
+        book.shelf = newShelf;
         
-        BooksAPI.update(myBook, newShelf)
+        BooksAPI.update(book, newShelf)
                 .then(this.setState(prevState => ({
-                  myBooks: prevState.myBooks.concat(myBook)
+                  myBooks: prevState.myBooks.concat(book)
                 })))
                 
-        console.log("new Book: ", myBook)
+        console.log("new Book: ", book)
     }
   };
 
